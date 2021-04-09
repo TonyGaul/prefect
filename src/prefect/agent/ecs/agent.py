@@ -489,7 +489,8 @@ class ECSAgent(Agent):
             env.update(
                 {
                     "PREFECT__LOGGING__LEVEL": run_config.env.pop(
-                        "PREFECT__LOGGING__LEVEL", config.logging.level
+                        "PREFECT__LOGGING__LEVEL",
+                        env.get("PREFECT__LOGGING__LEVEL", config.logging.level),
                     )
                 }
             )

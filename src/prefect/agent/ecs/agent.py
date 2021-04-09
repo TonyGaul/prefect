@@ -486,6 +486,13 @@ class ECSAgent(Agent):
         # - Values set using the `--env` CLI flag on the agent
         env = self.env_vars.copy()
         if run_config.env:
+            env.update(
+                {
+                    "PREFECT__LOGGING__LEVEL": run_config.env.pop(
+                        "PREFECT__LOGGING__LEVEL", config.logging.level
+                    )
+                }
+            )
             env.update(run_config.env)
         env.update(
             {

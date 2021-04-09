@@ -516,7 +516,7 @@ class KubernetesAgent(Agent):
         env[4]["value"] = self.namespace
         env[5]["value"] = str(self.labels)
         env[6]["value"] = str(self.log_to_cloud).lower()
-        env[7]["value"] = self.env_vars.get(
+        env[7]["value"] = self.env_vars.pop(
             "PREFECT__LOGGING__LEVEL", config.logging.level
         )
 

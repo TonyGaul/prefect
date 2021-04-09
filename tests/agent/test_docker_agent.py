@@ -109,13 +109,14 @@ def test_docker_agent_ping_exception(api):
 
 
 def test_populate_env_vars_from_agent_config(api):
-    agent = DockerAgent(env_vars=dict(AUTH_THING="foo"))
+    agent = DockerAgent(env_vars=dict(AUTH_THING="foo", PREFECT__LOGGING__LEVEL="TEST"))
 
     env_vars = agent.populate_env_vars(
         GraphQLResult({"id": "id", "name": "name", "flow": {"id": "foo"}}), "test-image"
     )
 
     assert env_vars["AUTH_THING"] == "foo"
+    assert env_vars["PREFECT__LOGGING__LEVEL"] == "TEST"
 
 
 def test_populate_env_vars(api, backend):
@@ -168,7 +169,9 @@ def test_populate_env_vars_sets_log_to_cloud(flag, api):
 
 
 def test_populate_env_vars_from_run_config(api):
-    agent = DockerAgent(env_vars={"KEY1": "VAL1", "KEY2": "VAL2"})
+    agent = DockerAgent(
+        env_vars={"KEY1": "VAL1", "KEY2": "VAL2", "PREFECT__LOGGING__LEVEL": "TEST2"}
+    )
 
     run = DockerRun(
         env={"KEY2": "OVERRIDE", "PREFECT__LOGGING__LEVEL": "TEST"},

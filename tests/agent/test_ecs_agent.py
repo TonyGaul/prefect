@@ -538,7 +538,13 @@ class TestGetRunTaskKwargs:
             )
 
         kwargs = self.get_run_task_kwargs(
-            ECSRun(env={"CUSTOM3": "OVERRIDE3", "CUSTOM4": "VALUE4"}),
+            ECSRun(
+                env={
+                    "CUSTOM3": "OVERRIDE3",
+                    "CUSTOM4": "VALUE4",
+                    "PREFECT__LOGGING__LEVEL": "TEST",
+                }
+            ),
             env_vars={"CUSTOM2": "OVERRIDE2", "CUSTOM3": "VALUE3"},
             run_task_kwargs_path=path,
         )
@@ -559,6 +565,7 @@ class TestGetRunTaskKwargs:
             "CUSTOM2": "OVERRIDE2",  # agent envs override agent run-task-kwargs
             "CUSTOM3": "OVERRIDE3",  # run-config envs override agent
             "CUSTOM4": "VALUE4",
+            "PREFECT__LOGGING__LEVEL": "TEST",  # run config logging level should override
         }
 
 

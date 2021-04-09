@@ -1363,7 +1363,12 @@ class TestK8sAgentRunConfig:
 
         self.agent.env_vars = {"CUSTOM2": "OVERRIDE2", "CUSTOM3": "VALUE3"}
         run_config = KubernetesRun(
-            image="test-image", env={"CUSTOM3": "OVERRIDE3", "CUSTOM4": "VALUE4"}
+            image="test-image",
+            env={
+                "CUSTOM3": "OVERRIDE3",
+                "CUSTOM4": "VALUE4",
+                "PREFECT__LOGGING__LEVEL": "TEST",
+            },
         )
 
         flow_run = self.build_flow_run(run_config)
@@ -1386,6 +1391,7 @@ class TestK8sAgentRunConfig:
             "CUSTOM2": "OVERRIDE2",  # Agent env-vars override those in template
             "CUSTOM3": "OVERRIDE3",  # RunConfig env-vars override those on agent and template
             "CUSTOM4": "VALUE4",
+            "PREFECT__LOGGING__LEVEL": "TEST",
         }
 
     def test_generate_job_spec_resources(self):

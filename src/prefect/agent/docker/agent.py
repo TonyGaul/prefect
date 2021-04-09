@@ -520,17 +520,24 @@ class DockerAgent(Agent):
 
         env = {}
         # Populate environment variables, later sources overriding
-
-        # 1. Logging config (optional)
-        # We only set this on non-DockerRun runs for backwards compatibility.
-        # In the future we don't want the agent to set logging config on a flow
-        # run unless explicitly asked.  We do this early on so later config
-        # sources can override
-        if run_config is None:
-            env.update({"PREFECT__LOGGING__LEVEL": config.logging.level})
-
-        # 2. Values set on the agent via `--env`
+        # 1. Values set on the agent via `--env`
         env.update(self.env_vars)
+
+        # 2. Logging config - if logging level is passed as an environment
+        # variable on the run config, it should take precedence
+        existing_logging_level = env.get(
+            "PREFECT__LOGGING__LEVEL", config.logging.level
+        )
+        if run_config is not None and run_config.env is not None:
+            env.update(
+                {
+                    "PREFECT__LOGGING__LEVEL": run_config.env.pop(
+                        "PREFECT__LOGGING__LEVEL", existing_logging_level
+                    )
+                }
+            )
+        else:
+            env.update({"PREFECT__LOGGING__LEVEL": existing_logging_level})
 
         # 3. Values set on a DockerRun RunConfig (if present)
         if run_config is not None and run_config.env is not None:

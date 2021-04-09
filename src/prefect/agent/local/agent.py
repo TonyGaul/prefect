@@ -209,8 +209,17 @@ class LocalAgent(Agent):
         # 4. Values set on the agent via `--env`
         env.update(self.env_vars)
 
-        # 5. Values set on a LocalRun RunConfig (if present
+        # 5. Values set on a LocalRun RunConfig (if present)
         if run_config is not None and run_config.env is not None:
+            # logging level passed via runconfig environment variable
+            # should always take precedence
+            env.update(
+                {
+                    "PREFECT__LOGGING__LEVEL": run_config.env.pop(
+                        "PREFECT__LOGGING__LEVEL", env["PREFECT__LOGGING__LEVEL"]
+                    )
+                }
+            )
             env.update(run_config.env)
 
         # 6. Non-overrideable required env vars

@@ -518,7 +518,7 @@ class DockerAgent(Agent):
         else:
             api = config.cloud.api
 
-        env = {} # type: ignore
+        env = {}  # type: ignore
         # Populate environment variables, later sources overriding
         # 1. Values set on the agent via `--env`
         env.update(self.env_vars)
